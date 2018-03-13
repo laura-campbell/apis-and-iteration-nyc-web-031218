@@ -21,16 +21,16 @@ def get_character_movies_from_api(character)
   # end
 
   films = nil
-  while character_hash['next'] != nil
+  while character_hash['next'] != nil && films == nil
 
     character_hash['results'].each do |x|
       if x['name'] == character
-        # puts "adding films into the array"
+        puts "adding films into the array"
         films = x['films']
       end
       #binding.pry
     end
-    # puts "Loading next page"
+    puts "Loading next page"
 
     page_url = character_hash['next']
     all_characters = RestClient.get(page_url)
