@@ -4,21 +4,77 @@ require 'pry'
 
 def get_character_movies_from_api(character)
 
-  all_characters = RestClient.get('http://www.swapi.co/api/people/?search=' + character)
+  page_url = 'http://www.swapi.co/api/people/?page=1'
+
+  all_characters = RestClient.get(page_url)
   character_hash = JSON.parse(all_characters)
-  #inding.pry
-  if character_hash['results'][0] == nil
-    puts "Sorry, that's not a character. Try again"
-    run
+
+  # results_array = []
+  # results_array << character_hash['results']
+
+  # while character_hash['next'] != nil
+  #   results_array << character_hash['results']
+  #   puts "Loading next page"
+  #   page_url = character_hash['next']
+  #   all_characters = RestClient.get(page_url)
+  #   character_hash = JSON.parse(all_characters)
+  # end
+
+  films = nil
+  while character_hash['next'] != nil
+
+    character_hash['results'].each do |x|
+      if x['name'] == character
+        # puts "adding films into the array"
+        films = x['films']
+      end
+      #binding.pry
+    end
+    # puts "Loading next page"
+
+    page_url = character_hash['next']
+    all_characters = RestClient.get(page_url)
+    character_hash = JSON.parse(all_characters)
+
   end
-  films = character_hash['results'].map do |array|
-    array['films']
-  end.flatten
+
+  # puts films.class
+
   films.map do |film|
     film_response = JSON.parse(RestClient.get(film))
-    film_response
+    # film_response
+end
+
+  # results_array.flatten!
+  #
+  # results_array.each do |page_hash|
+  #   page_hash.each do |person_hash|
+  #     if person_hash['name'] ==
+  #     if name == what was entered
+  #         pull all films and store in films array
+
+  # results_array = []
+  # while next != null
+  #   store results in array
+  #   pull the next one #=> url =
+  # end
+  # array.flatten
+
+
+  # all_characters = RestClient.get('http://www.swapi.co/api/people/?search=' + character)
+  # character_hash = JSON.parse(all_characters)
+  # #inding.pry
+  # if character_hash['results'][0] == nil
+  #   puts "Sorry, that's not a character. Try again"
+  #   run
+  # end
+  # films = character_hash['results'].map do |array|
+  #   array['films']
+  # end.flatten
+  # films.map do |film|
+  #   film_response = JSON.parse(RestClient.get(film))
+  #   film_response
     # binding.pry
-  end
   # character_hash['results'][0]['films']
   # iterate over the character hash to  find the collection of `films` for the given
   #   `character`
